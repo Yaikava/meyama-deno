@@ -96,7 +96,7 @@ function execQueue(
     );
   });
 
-  player.once("end", async () => {
+  player.on("end", async () => {
     if (!interaction.guildId) return;
     queue.songs.shift();
     queue.requester.shift();
