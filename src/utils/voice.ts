@@ -82,14 +82,7 @@ function execQueue(
               label: "Stop",
               style: DiscordButtonStyles.Danger,
               emoji: "🛑",
-            },
-            {
-              type: 2,
-              customId: "music_skip",
-              label: "Skip",
-              style: DiscordButtonStyles.Secondary,
-              emoji: "⏩️",
-            },
+            }
           ],
         }],
       },
