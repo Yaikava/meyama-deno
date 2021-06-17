@@ -1,16 +1,15 @@
 {
-    "token": "bot token",
-    "owners": [
-      "your id ig"
-    ],
-    "nodes": [
-      {
-        "id": "main",
-        "host": "localhost",
-        "port": 42069,
-        "password": "youshallpass"
-      }
-    ],
-    "superSecretAuthKeyForDB": "this is to interact with the mongoose db. ask me for details, cba to write shit here"
-  }
-  
+  "token": "bot token",
+  "owners": [
+    "your id ig"
+  ],
+  "nodes": [
+    {
+      "id": "main",
+      "host": "localhost",
+      "port": 42069,
+      "password": "youshallpass"
+    }
+  ],
+  "superSecretAuthKeyForDB": "this is to interact with the mongoose db. ask me for details, cba to write shit here"
+}

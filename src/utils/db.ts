@@ -1,5 +1,5 @@
 import { config } from "../../deps.ts";
-import {BotClient} from "../classes/Client.ts"
+import { BotClient } from "../classes/Client.ts";
 
 export async function getGuild(id: bigint) {
   const req = await fetch("http://localhost:55525/guilds/" + String(id), {
@@ -25,7 +25,7 @@ export async function setProperty(
   guildId: bigint,
   property: string, //deno-lint-ignore no-explicit-any
   value: any,
-  client: BotClient
+  client: BotClient,
 ) {
   const req = await fetch("http://localhost:55525/guilds/" + String(guildId), {
     method: "POST",
@@ -38,7 +38,7 @@ export async function setProperty(
       value: value,
     }),
   });
-  const dbcache = client.dbcache.get(guildId)
-  eval(`dbcache.${property} = ${JSON.stringify(value)}`)
+  const dbcache = client.dbcache.get(guildId);
+  eval(`dbcache.${property} = ${JSON.stringify(value)}`);
   return req.ok;
 }

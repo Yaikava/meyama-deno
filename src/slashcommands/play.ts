@@ -19,7 +19,7 @@ export default {
     ) {
       return;
     }
-    const player = client.musicManager.players.get(
+    let player = client.musicManager.players.get(
       interaction.guildId.toString(),
     );
     const guild = client.guilds.get(snowflakeToBigint(interaction.guildId));
@@ -43,13 +43,11 @@ export default {
       });
     }
     if (!player) {
-      const newPlayer = client.musicManager.create(
+      player = client.musicManager.create(
         interaction.guildId.toString(),
       );
-      newPlayer.connect(voiceState.channelId.toString(), { selfDeaf: true });
-    } else {
-      player.connect(voiceState.channelId.toString(), {});
     }
+    player.connect(voiceState.channelId.toString(), { selfDeaf: true });
 
     if (!interaction.data.options) return;
     let song = "";

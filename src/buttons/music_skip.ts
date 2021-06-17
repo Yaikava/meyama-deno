@@ -14,12 +14,11 @@ export default {
   ) => {
     const check = buttonsVoiceCheck(interaction, member, client);
     if (!check) return;
-    const queue = check.queue, manager = check.manager;
-    queue.songs = [];
+    const manager = check.manager;
     await interaction.send({
       type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
       data: {
-        content: "Alright, have a good day qt :3 See ya later!",
+        content: "Song skipped!",
         flags: 64,
       },
     });

@@ -30,7 +30,8 @@ function execQueue(
   if (!channel) return;
   const member = guild.members.get(queue.requester[0]);
   if (!member) return;
-  player.play(queue.songs[0].track);
+
+  player.play(queue.songs[0].track)
 
   // Handle if bot gets kicked from the voice channel
   player.once("closed", async () => {
@@ -78,11 +79,17 @@ function execQueue(
             },
             {
               type: 2,
+              customId: "music_skip",
+              label: "Skip",
+              style: DiscordButtonStyles.Secondary,
+            },
+            {
+              type: 2,
               customId: "music_stop",
               label: "Stop",
               style: DiscordButtonStyles.Danger,
               emoji: "🛑",
-            }
+            },
           ],
         }],
       },
@@ -96,12 +103,14 @@ function execQueue(
     if (queue.npmsg) {
       await queue.npmsg.delete();
     }
-    if (queue.songs.length == 0) {
+    if (queue.songs.length == 0) { //lave vc
       await client.musicManager.destroy(interaction.guildId.toString());
       client.musicQueue.delete(interaction.guildId);
+      channel.send("Queue is apparently empty idk");
       return;
+    } else {
+      //WHAT TO DO HERE TO PLAY NEXT SONG
     }
-    execQueue(interaction, player, client);
   });
 }
 
@@ -116,24 +125,27 @@ export async function addSoundToQueue(
   const player = client.musicManager.players.get(
     interaction.guildId.toString(),
   );
-  if (client.musicQueue.has(interaction.guildId)) {
-    client.musicQueue.get(interaction.guildId)?.songs?.push(track);
-    await interaction.edit({
+  const queue = client.musicQueue.get(interaction.guildId);
+  if (!player) return;
+  async function editInteraction() {
+    return await interaction.edit({
       content:
         `Added **${track.info.title}** by **${track.info.author}** to the queue!`,
     });
+  }
+  if (queue) {
+    queue.songs = queue.songs.concat(track);
+    queue.requester = queue.requester.concat(
+      BigInt(interaction.member.user.id),
+    );
+    await editInteraction();
   } else {
     client.musicQueue.set(interaction.guildId, {
       textChannelId: BigInt(interaction.channelId),
       songs: [track],
       requester: [BigInt(interaction.member.user.id)],
     });
-    await interaction.edit({
-      content:
-        `Added **${track.info.title}** by **${track.info.author}** to the queue!`,
-    });
-  }
-  if (player) {
+    await editInteraction();
     execQueue(interaction, player, client);
   }
 }
@@ -150,21 +162,22 @@ export async function addPlaylistToQueue(
   const player = client.musicManager.players.get(
     interaction.guildId.toString(),
   );
-  if (client.musicQueue.has(interaction.guildId)) {
-    client.musicQueue.set(
-      interaction.guildId,
-      {
-        textChannelId: BigInt(interaction.channelId),
-        songs: client.musicQueue.get(interaction.guildId)!.songs?.concat(
-          tracks,
-        ),
-        requester: client.musicQueue.get(interaction.guildId)!.requester.concat(
-          Array.from({ length: tracks.length }).map(() =>
-            BigInt(interaction.member?.user.id)
-          ),
-        ),
-      },
+  const queue = client.musicQueue.get(interaction.guildId);
+  if (!player) return;
+  async function editInteraction() {
+    return await interaction.edit({
+      content:
+        `Added ${tracks.length} songs from the playlist: ${playlistName} to the queue!`,
+    });
+  }
+  if (queue) {
+    queue.songs = queue.songs.concat(tracks);
+    queue.requester = queue.requester.concat(
+      Array.from({ length: tracks.length }).map(() =>
+        BigInt(interaction.member?.user.id)
+      ),
     );
+    await editInteraction();
   } else {
     client.musicQueue.set(interaction.guildId, {
       textChannelId: BigInt(interaction.channelId),
@@ -173,12 +186,7 @@ export async function addPlaylistToQueue(
         BigInt(interaction.member?.user.id)
       ),
     });
-  }
-  await interaction.edit({
-    content:
-      `Added ${tracks.length} songs from the playlist: ${playlistName} to the queue!`,
-  });
-  if (player) {
+    await editInteraction();
     execQueue(interaction, player, client);
   }
 }
