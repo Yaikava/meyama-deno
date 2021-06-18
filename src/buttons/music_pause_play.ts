@@ -35,10 +35,14 @@ export default {
               `**Title:** [${track.title}](${track.uri})\n**Author:** ${track.author}\n**Duration:** ${
                 track.isStream ? "Live stream" : duration(track.length)
               }\n**Requester:** ${member.tag}`,
-              fields: [
-                {name: "State", value: manager.paused?"Paused":"Playing", inline: true},
-                {name: "Loop", value: check.queue.loop, inline: true}
-              ]
+            fields: [
+              {
+                name: "State",
+                value: manager.paused ? "Paused" : "Playing",
+                inline: true,
+              },
+              { name: "Loop", value: check.queue.loop, inline: true },
+            ],
           },
         ],
       },

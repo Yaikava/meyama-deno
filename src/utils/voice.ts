@@ -65,10 +65,14 @@ function execQueue(
               `**Title:** [${track.title}](${track.uri})\n**Author:** ${track.author}\n**Duration:** ${
                 track.isStream ? "Live stream" : duration(track.length)
               }\n**Requester:** ${member.tag}\n**Paused:** ${player.paused}`,
-              fields: [
-                {name: "State", value: player.paused?"Paused":"Playing", inline: true},
-                {name: "Loop", value: queue.loop, inline: true}
-              ]
+            fields: [
+              {
+                name: "State",
+                value: player.paused ? "Paused" : "Playing",
+                inline: true,
+              },
+              { name: "Loop", value: queue.loop, inline: true },
+            ],
           },
         ],
         components: [{
@@ -111,9 +115,9 @@ function execQueue(
               style: DiscordButtonStyles.Primary,
               emoji: {
                 name: "🔁",
-                id: undefined
-              }
-            }
+                id: undefined,
+              },
+            },
           ],
         }],
       },
@@ -122,20 +126,20 @@ function execQueue(
 
   player.on("end", async () => {
     if (!interaction.guildId) return;
-    if (queue.loop == "disabled") { 
-    queue.songs.shift();
-    queue.requester.shift();
+    if (queue.loop == "disabled") {
+      queue.songs.shift();
+      queue.requester.shift();
     } else if (queue.loop == "track") {
-      "h"
+      "h";
     } else { //deno-lint-ignore no-explicit-any
-      let elt: any = queue.songs.shift()
-       if (elt) {
-      queue.songs=queue.songs.concat([elt])
-       }
-       elt = queue.requester.shift()
-       if (elt) {
-        queue.requester=queue.requester.concat([elt])
-       }
+      let elt: any = queue.songs.shift();
+      if (elt) {
+        queue.songs = queue.songs.concat([elt]);
+      }
+      elt = queue.requester.shift();
+      if (elt) {
+        queue.requester = queue.requester.concat([elt]);
+      }
     }
     if (queue.npmsg) {
       await queue.npmsg.delete();
@@ -181,7 +185,7 @@ export async function addSoundToQueue(
       textChannelId: BigInt(interaction.channelId),
       songs: [track],
       requester: [BigInt(interaction.member.user.id)],
-      loop: "disabled"
+      loop: "disabled",
     });
     await editInteraction();
     execQueue(interaction, player, client);
@@ -223,7 +227,7 @@ export async function addPlaylistToQueue(
       requester: Array.from({ length: tracks.length }).map(() =>
         BigInt(interaction.member?.user.id)
       ),
-      loop: "disabled"
+      loop: "disabled",
     });
     await editInteraction();
     execQueue(interaction, player, client);

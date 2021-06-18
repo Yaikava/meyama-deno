@@ -1,6 +1,6 @@
 import { BotClient } from "./src/classes/Client.ts";
 import { config } from "./deps.ts";
-import {importDirectory,fileLoader} from "./src/utils/load.ts"
+import { fileLoader, importDirectory } from "./src/utils/load.ts";
 
 await Promise.all(
   [
@@ -10,7 +10,7 @@ await Promise.all(
     "./src/classes",
     "./src/slashcommands",
     "./src/types",
-    "./src/utils"
+    "./src/utils",
   ].map((path) => importDirectory(Deno.realPathSync(path))),
 );
 await fileLoader();

@@ -19,8 +19,7 @@ export default {
     await interaction.send({
       type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
       data: {
-        content: "Alright, have a good day qt :3 See ya later!",
-        flags: 64,
+        content: `Queue stopped by ${member.tag}`,
       },
     });
     manager.stop();

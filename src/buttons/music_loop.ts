@@ -15,13 +15,15 @@ export default {
   ) => {
     const check = buttonsVoiceCheck(interaction, member, client);
     if (!check) return;
-    const manager = check.manager, queue = check.queue, track = queue.songs[0].info;
+    const manager = check.manager,
+      queue = check.queue,
+      track = queue.songs[0].info;
     if (queue.loop == "disabled") {
-      queue.loop = "track"
+      queue.loop = "track";
     } else if (queue.loop == "track") {
-      queue.loop = "queue"
+      queue.loop = "queue";
     } else {
-      queue.loop = "disabled"
+      queue.loop = "disabled";
     }
     interaction.send({
       type: DiscordInteractionResponseTypes.UpdateMessage,
@@ -41,10 +43,14 @@ export default {
               `**Title:** [${track.title}](${track.uri})\n**Author:** ${track.author}\n**Duration:** ${
                 track.isStream ? "Live stream" : duration(track.length)
               }\n**Requester:** ${member.tag}`,
-              fields: [
-                {name: "State", value: manager.paused?"Paused":"Playing", inline: true},
-                {name: "Loop", value: queue.loop, inline: true}
-              ]
+            fields: [
+              {
+                name: "State",
+                value: manager.paused ? "Paused" : "Playing",
+                inline: true,
+              },
+              { name: "Loop", value: queue.loop, inline: true },
+            ],
           },
         ],
       },

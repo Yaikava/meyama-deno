@@ -1,21 +1,19 @@
-import { config, UniversityMessage } from "../../deps.ts";
+import { config, UniversityMessage, db } from "../../deps.ts";
 import { BotClient } from "../classes/Client.ts";
-import { getGuild, setProperty } from "../utils/db.ts";
 
 export default {
   once: false,
   async run(message: UniversityMessage, client: BotClient) {
     if (!client.fullyReady || !message.guildId) return;
-    setProperty;
     if (message.isBot || message.webhookId) return;
     if (!client.dbcache.get(message.guildId)) {
-      const guild = await getGuild(message.guildId);
+      const guild = await db.getGuild(message.guildId);
       client.dbcache.set(message.guildId, guild);
     }
     const prefix: string = client.dbcache.get(message.guildId)?.config?.prefix;
-    if (message.content === `<@!${client.bot?.id}>`) {
+    if (message.content === `<@!${client.bot?.id}>` || message.content === `<@${client.bot?.id}>`) {
       return message.reply(
-        `Hi! My prefix in this server is \`${prefix}\`\nGet started with \`${prefix} help!\``,
+        `Hi! My prefix in this server is \`${prefix}\`\nGet started with \`${prefix}help!\``,
       );
     }
     if (!message.content.startsWith(prefix)) return;

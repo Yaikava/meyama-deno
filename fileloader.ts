@@ -11,6 +11,7 @@ import "file:///home/lumap/meyama-deno/src/events/raw.ts#2";
 import "file:///home/lumap/meyama-deno/src/events/ready.ts#2";
 import "file:///home/lumap/meyama-deno/src/classes/Client.ts#3";
 import "file:///home/lumap/meyama-deno/src/slashcommands/play.ts#4";
+import "file:///home/lumap/meyama-deno/src/types/reminder.ts#5";
 import "file:///home/lumap/meyama-deno/src/types/command.ts#5";
 import "file:///home/lumap/meyama-deno/src/types/musicQueue.ts#5";
 import "file:///home/lumap/meyama-deno/src/utils/shuffle.ts#6";

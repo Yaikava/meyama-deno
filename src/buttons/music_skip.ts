@@ -14,12 +14,11 @@ export default {
   ) => {
     const check = buttonsVoiceCheck(interaction, member, client);
     if (!check) return;
-    const manager = check.manager;
+    const manager = check.manager,track = check.queue.songs[0].info;
     await interaction.send({
       type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
       data: {
-        content: "Song skipped!",
-        flags: 64,
+        content: `Song **${track.title}** skipped by ${member.tag}`,
       },
     });
     manager.stop();

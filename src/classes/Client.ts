@@ -8,9 +8,11 @@ import {
   snowflakeToBigint,
   UniversityButtonInteraction,
   UniversitySlashInteraction,
+  db
 } from "../../deps.ts";
 import { musicQueue } from "../types/musicQueue.ts";
 import { command } from "../types/command.ts";
+import { reminder } from "../types/reminder.ts"
 
 export class BotClient extends Client {
   fullyReady: boolean;
@@ -41,6 +43,7 @@ export class BotClient extends Client {
   musicQueue: Collection<string, musicQueue>;
   commands: Collection<string, command>;
   aliases: Collection<string, string>;
+  reminders: reminder[];
 
   constructor(botConfig: Omit<BotConfig, "eventHandlers">) {
     super(botConfig);
@@ -50,6 +53,7 @@ export class BotClient extends Client {
     this.musicQueue = new Collection();
     this.buttons = new Collection();
     this.aliases = new Collection();
+    this.reminders = [];
     this.commands = new Collection();
     this.dbcache = new Collection();
     this.brandingColor = 12112639;
@@ -59,6 +63,7 @@ export class BotClient extends Client {
     this.loadSlashCommands();
     this.loadButtons();
     this.loadCommands();
+    this.loadReminders();
 
     //music
     this.musicManager = new Manager(config.nodes, {
@@ -135,5 +140,12 @@ export class BotClient extends Client {
       console.log(`Command ${name} loaded`);
     }
     console.log("All commands have been loaded!");
+  }
+
+  async loadReminders() {
+    console.log("Caching reminders...");
+    const reminders = await db.getReminders();
+    this.reminders = reminders;
+    console.log("Reminders cached!");
   }
 }
