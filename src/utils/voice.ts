@@ -64,7 +64,7 @@ function execQueue(
             description:
               `**Title:** [${track.title}](${track.uri})\n**Author:** ${track.author}\n**Duration:** ${
                 track.isStream ? "Live stream" : duration(track.length)
-              }\n**Requester:** ${member.tag}`,
+              }\n**Requester:** ${member.tag}\n**Paused:** ${player.paused}`,
           },
         ],
         components: [{
@@ -109,7 +109,7 @@ function execQueue(
       channel.send("Queue is apparently empty idk");
       return;
     } else {
-      //WHAT TO DO HERE TO PLAY NEXT SONG
+      player.play(queue.songs[0].track)
     }
   });
 }

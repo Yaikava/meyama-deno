@@ -10,13 +10,14 @@ import {
   UniversitySlashInteraction,
 } from "../../deps.ts";
 import { musicQueue } from "../types/musicQueue.ts";
+import {command} from "../types/command.ts"
 
 export class BotClient extends Client {
   fullyReady: boolean;
   brandingColor: number;
   musicManager: Manager;
   //deno-lint-ignore no-explicit-any
-  dbcache: Map<bigint, any>;
+  dbcache: Collection<bigint, any>;
   slashcommands: Collection<
     string,
     {
@@ -38,6 +39,8 @@ export class BotClient extends Client {
     }
   >;
   musicQueue: Collection<string, musicQueue>;
+  commands: Collection<string,command>;
+  aliases: Collection<string,string>;
 
   constructor(botConfig: Omit<BotConfig, "eventHandlers">) {
     super(botConfig);
@@ -46,13 +49,16 @@ export class BotClient extends Client {
     this.slashcommands = new Collection();
     this.musicQueue = new Collection();
     this.buttons = new Collection();
-    this.dbcache = new Map();
+    this.aliases=new Collection()
+    this.commands=new Collection()
+    this.dbcache = new Collection();
     this.brandingColor = 12112639;
 
     //loading stuff
     this.loadEvents();
     this.loadSlashCommands();
     this.loadButtons();
+    this.loadCommands()
 
     //music
     this.musicManager = new Manager(config.nodes, {
@@ -113,5 +119,21 @@ export class BotClient extends Client {
       console.log(`Button ${name} loaded!`);
     }
     console.log("All buttons have been loaded!");
+  }
+
+  async loadCommands() {
+    console.log("Loading commands...");
+    for (const command of Deno.readDirSync("./src/commands")) {
+      const name = command.name.slice(0, -3);
+      const e: command = (await import(`../commands/${command.name}`)).default;
+      this.commands.set(name, e);
+      if (e.aliases) {
+        e.aliases.forEach(alias => {
+          this.aliases.set(alias,name)
+        })
+      }
+      console.log(`Command ${name} loaded`);
+    }
+    console.log("All commands have been loaded!");
   }
 }

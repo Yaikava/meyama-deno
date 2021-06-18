@@ -21,7 +21,7 @@ export default (
       type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
       data: {
         content:
-          "You need to be teh requester of the current song in order to do this!",
+          "You need to be the requester of the current song in order to do this!",
         flags: 64,
       },
     });
