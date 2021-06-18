@@ -196,7 +196,6 @@ export async function addSoundToQueue(
       BigInt(interaction.member.user.id),
     );
     await editInteraction();
-    console.log("song added to existing queue");
   } else {
     client.musicQueue.set(interaction.guildId, {
       textChannelId: BigInt(interaction.channelId),
@@ -205,7 +204,6 @@ export async function addSoundToQueue(
       loop: "disabled",
     });
     await editInteraction();
-    console.log("song added to new queue");
     execQueue(interaction, player, client);
   }
 }
