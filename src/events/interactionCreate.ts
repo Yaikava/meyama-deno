@@ -12,7 +12,7 @@ export default {
     member: DiscordenoMember,
     client: BotClient,
   ) {
-    if (client.fullyReady == false) return;
+    if (client.fullyReady == false || !interaction.channelId) return;
     if (interaction instanceof UniversitySlashInteraction) {
       if (!interaction.data.name) return;
       const slashcommand = client.slashcommands.get(interaction.data.name);

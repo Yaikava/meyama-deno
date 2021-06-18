@@ -7,7 +7,7 @@ export const com: command = {
     deps;
     client;
     try {
-      const evaal = Deno.inspect(await eval(args.join(" ")));
+      const evaal = await eval(args.join(" "));
       message.reply("```ts\n" + String(evaal).slice(0, 1990) + "```", false);
     } catch (e) {
       message.reply("```ts\n" + e + "```", false);

@@ -1,6 +1,6 @@
 import { config } from "../../deps.ts";
 import { BotClient } from "../classes/Client.ts";
-import { reminder } from "../types/reminder.ts"
+import { reminder } from "../types/reminder.ts";
 
 export async function getGuild(id: bigint) {
   const req = await fetch("http://localhost:55525/guilds/" + String(id), {
@@ -57,13 +57,12 @@ export async function getReminders(): Promise<reminder[]> {
   return res as reminder[];
 }
 
-
 export async function createReminder(
   id: string,
   userid: string,
   content: string,
   time: string,
-  client: BotClient
+  client: BotClient,
 ) {
   const req = await fetch("http://localhost:55525/reminders/" + id, {
     method: "POST",
@@ -83,21 +82,21 @@ export async function createReminder(
     userid: userid,
     content: content,
     time: time,
-  } as reminder)
+  } as reminder);
   return req.ok;
 }
 
 export async function deleteReminder(
   id: string,
-  client: BotClient
+  client: BotClient,
 ) {
   const req = await fetch("http://localhost:55525/reminders/" + id, {
     method: "DELETE",
     headers: {
       Authorization: config.superSecretAuthKeyForDB,
       "Content-Type": "application/json",
-    }
+    },
   });
-  client.reminders=client.reminders.filter(c => c.ID !== id)
+  client.reminders = client.reminders.filter((c) => c.ID !== id);
   return req.ok;
 }

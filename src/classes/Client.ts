@@ -3,16 +3,16 @@ import {
   Client,
   Collection,
   config,
+  db,
   DiscordenoMember,
   Manager,
   snowflakeToBigint,
   UniversityButtonInteraction,
   UniversitySlashInteraction,
-  db
 } from "../../deps.ts";
 import { musicQueue } from "../types/musicQueue.ts";
 import { command } from "../types/command.ts";
-import { reminder } from "../types/reminder.ts"
+import { reminder } from "../types/reminder.ts";
 
 export class BotClient extends Client {
   fullyReady: boolean;

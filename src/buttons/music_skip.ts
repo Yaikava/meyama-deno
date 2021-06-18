@@ -14,7 +14,7 @@ export default {
   ) => {
     const check = buttonsVoiceCheck(interaction, member, client);
     if (!check) return;
-    const manager = check.manager,track = check.queue.songs[0].info;
+    const manager = check.manager, track = check.queue.songs[0].info;
     await interaction.send({
       type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
       data: {

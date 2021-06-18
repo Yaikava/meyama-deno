@@ -5,4 +5,4 @@ export type reminder = {
   userid: string;
 };
 
-export default reminder
+export default reminder;

@@ -9,6 +9,7 @@ import "file:///home/lumap/meyama-deno/src/events/interactionCreate.ts#2";
 import "file:///home/lumap/meyama-deno/src/events/messageCreate.ts#2";
 import "file:///home/lumap/meyama-deno/src/events/raw.ts#2";
 import "file:///home/lumap/meyama-deno/src/events/ready.ts#2";
+import "file:///home/lumap/meyama-deno/src/events/error.ts#2";
 import "file:///home/lumap/meyama-deno/src/classes/Client.ts#3";
 import "file:///home/lumap/meyama-deno/src/slashcommands/play.ts#4";
 import "file:///home/lumap/meyama-deno/src/types/reminder.ts#5";

@@ -1,4 +1,4 @@
-import { config, UniversityMessage, db } from "../../deps.ts";
+import { config, db, UniversityMessage } from "../../deps.ts";
 import { BotClient } from "../classes/Client.ts";
 
 export default {
@@ -11,7 +11,10 @@ export default {
       client.dbcache.set(message.guildId, guild);
     }
     const prefix: string = client.dbcache.get(message.guildId)?.config?.prefix;
-    if (message.content === `<@!${client.bot?.id}>` || message.content === `<@${client.bot?.id}>`) {
+    if (
+      message.content === `<@!${client.bot?.id}>` ||
+      message.content === `<@${client.bot?.id}>`
+    ) {
       return message.reply(
         `Hi! My prefix in this server is \`${prefix}\`\nGet started with \`${prefix}help!\``,
       );

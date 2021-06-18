@@ -14,24 +14,37 @@ export function getMusicLength(milliseconds: number) {
     : new Date(milliseconds).toISOString().substr(14, 5);
 }
 
-function execQueue(
+async function execQueue(
   interaction: UniversitySlashInteraction,
   player: Player,
   client: BotClient,
 ) {
-  if (!interaction.guildId) return;
-  const queue = client.musicQueue.get(interaction.guildId);
-  if (!queue || queue.songs.length === 0) {
-    return;
+  if (!interaction.guildId || !interaction.channelId) {
+    return console.log("no interaction guild id");
   }
+  const queue = client.musicQueue.get(interaction.guildId);
+  if (!queue || queue.songs.length === 0) return;
   const guild = client.guilds.get(BigInt(interaction.guildId));
   if (!guild) return;
-  const channel = guild.channels.get(queue.textChannelId);
-  if (!channel) return;
-  const member = guild.members.get(queue.requester[0]);
-  if (!member) return;
+  let channel = guild.channels.get(queue.textChannelId);
+  if (!channel) {
+    await client.helpers.channels.getChannel(
+      BigInt(interaction.channelId),
+      true,
+    );
+    channel = guild.channels.get(queue.textChannelId);
+  }
+  let member = guild.members.get(queue.requester[0]);
+  if (!member) {
+    member = await client.helpers.members.getMember(
+      BigInt(interaction.guildId),
+      queue.requester[0],
+      { force: true },
+    );
+  }
 
   player.play(queue.songs[0].track);
+
 
   // Handle if bot gets kicked from the voice channel
   player.once("closed", async () => {
@@ -42,12 +55,14 @@ function execQueue(
       await queue.npmsg.delete();
     }
     client.musicQueue.delete(interaction.guildId);
+    if (!member || !channel) return;
     await client.musicManager.destroy(interaction.guildId);
     await channel.send("I have been disconnected from the channel.");
   });
 
   player.on("start", async () => {
     const track = queue.songs[0].info;
+    if (!member || !channel) return;
     queue.npmsg = await channel.send(
       {
         embeds: [
@@ -126,6 +141,7 @@ function execQueue(
 
   player.on("end", async () => {
     if (!interaction.guildId) return;
+    if (!member || !channel) return;
     if (queue.loop == "disabled") {
       queue.songs.shift();
       queue.requester.shift();
@@ -145,7 +161,7 @@ function execQueue(
       await queue.npmsg.delete();
     }
     if (queue.songs.length == 0) { //lave vc
-      await client.musicManager.destroy(interaction.guildId.toString());
+      await client.musicManager.destroy(interaction.guildId);
       client.musicQueue.delete(interaction.guildId);
       channel.send("Queue is apparently empty idk");
       return;
@@ -180,6 +196,7 @@ export async function addSoundToQueue(
       BigInt(interaction.member.user.id),
     );
     await editInteraction();
+    console.log("song added to existing queue");
   } else {
     client.musicQueue.set(interaction.guildId, {
       textChannelId: BigInt(interaction.channelId),
@@ -188,6 +205,7 @@ export async function addSoundToQueue(
       loop: "disabled",
     });
     await editInteraction();
+    console.log("song added to new queue");
     execQueue(interaction, player, client);
   }
 }
