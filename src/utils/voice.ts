@@ -31,7 +31,7 @@ function execQueue(
   const member = guild.members.get(queue.requester[0]);
   if (!member) return;
 
-  player.play(queue.songs[0].track)
+  player.play(queue.songs[0].track);
 
   // Handle if bot gets kicked from the voice channel
   player.once("closed", async () => {
@@ -65,6 +65,10 @@ function execQueue(
               `**Title:** [${track.title}](${track.uri})\n**Author:** ${track.author}\n**Duration:** ${
                 track.isStream ? "Live stream" : duration(track.length)
               }\n**Requester:** ${member.tag}\n**Paused:** ${player.paused}`,
+              fields: [
+                {name: "State", value: player.paused?"Paused":"Playing", inline: true},
+                {name: "Loop", value: queue.loop, inline: true}
+              ]
           },
         ],
         components: [{
@@ -75,21 +79,41 @@ function execQueue(
               customId: "music_pause_play",
               label: "Pause/Play",
               style: DiscordButtonStyles.Secondary,
-              emoji: "⏯️",
+              emoji: {
+                name: "⏯️",
+                id: undefined,
+              },
             },
             {
               type: 2,
               customId: "music_skip",
               label: "Skip",
               style: DiscordButtonStyles.Secondary,
+              emoji: {
+                name: "⏩",
+                id: undefined,
+              },
             },
             {
               type: 2,
               customId: "music_stop",
               label: "Stop",
               style: DiscordButtonStyles.Danger,
-              emoji: "🛑",
+              emoji: {
+                name: "🛑",
+                id: undefined,
+              },
             },
+            {
+              type: 2,
+              customId: "music_loop",
+              label: "Loop",
+              style: DiscordButtonStyles.Primary,
+              emoji: {
+                name: "🔁",
+                id: undefined
+              }
+            }
           ],
         }],
       },
@@ -98,8 +122,21 @@ function execQueue(
 
   player.on("end", async () => {
     if (!interaction.guildId) return;
+    if (queue.loop == "disabled") { 
     queue.songs.shift();
     queue.requester.shift();
+    } else if (queue.loop == "track") {
+      "h"
+    } else { //deno-lint-ignore no-explicit-any
+      let elt: any = queue.songs.shift()
+       if (elt) {
+      queue.songs=queue.songs.concat([elt])
+       }
+       elt = queue.requester.shift()
+       if (elt) {
+        queue.requester=queue.requester.concat([elt])
+       }
+    }
     if (queue.npmsg) {
       await queue.npmsg.delete();
     }
@@ -109,7 +146,7 @@ function execQueue(
       channel.send("Queue is apparently empty idk");
       return;
     } else {
-      player.play(queue.songs[0].track)
+      player.play(queue.songs[0].track);
     }
   });
 }
@@ -144,6 +181,7 @@ export async function addSoundToQueue(
       textChannelId: BigInt(interaction.channelId),
       songs: [track],
       requester: [BigInt(interaction.member.user.id)],
+      loop: "disabled"
     });
     await editInteraction();
     execQueue(interaction, player, client);
@@ -185,6 +223,7 @@ export async function addPlaylistToQueue(
       requester: Array.from({ length: tracks.length }).map(() =>
         BigInt(interaction.member?.user.id)
       ),
+      loop: "disabled"
     });
     await editInteraction();
     execQueue(interaction, player, client);

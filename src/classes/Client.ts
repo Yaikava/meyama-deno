@@ -10,7 +10,7 @@ import {
   UniversitySlashInteraction,
 } from "../../deps.ts";
 import { musicQueue } from "../types/musicQueue.ts";
-import {command} from "../types/command.ts"
+import { command } from "../types/command.ts";
 
 export class BotClient extends Client {
   fullyReady: boolean;
@@ -39,8 +39,8 @@ export class BotClient extends Client {
     }
   >;
   musicQueue: Collection<string, musicQueue>;
-  commands: Collection<string,command>;
-  aliases: Collection<string,string>;
+  commands: Collection<string, command>;
+  aliases: Collection<string, string>;
 
   constructor(botConfig: Omit<BotConfig, "eventHandlers">) {
     super(botConfig);
@@ -49,8 +49,8 @@ export class BotClient extends Client {
     this.slashcommands = new Collection();
     this.musicQueue = new Collection();
     this.buttons = new Collection();
-    this.aliases=new Collection()
-    this.commands=new Collection()
+    this.aliases = new Collection();
+    this.commands = new Collection();
     this.dbcache = new Collection();
     this.brandingColor = 12112639;
 
@@ -58,7 +58,7 @@ export class BotClient extends Client {
     this.loadEvents();
     this.loadSlashCommands();
     this.loadButtons();
-    this.loadCommands()
+    this.loadCommands();
 
     //music
     this.musicManager = new Manager(config.nodes, {
@@ -128,9 +128,9 @@ export class BotClient extends Client {
       const e: command = (await import(`../commands/${command.name}`)).default;
       this.commands.set(name, e);
       if (e.aliases) {
-        e.aliases.forEach(alias => {
-          this.aliases.set(alias,name)
-        })
+        e.aliases.forEach((alias) => {
+          this.aliases.set(alias, name);
+        });
       }
       console.log(`Command ${name} loaded`);
     }

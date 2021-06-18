@@ -7,7 +7,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       interpreter: "deno",
-      interpreterArgs: "run --allow-net --allow-read mod.ts",
+      interpreterArgs: "run --allow-net --allow-read --allow-write mod.ts",
     },
   ],
 };

@@ -1,4 +1,4 @@
-import { UniversityMessage, config } from "../../deps.ts";
+import { config, UniversityMessage } from "../../deps.ts";
 import { BotClient } from "../classes/Client.ts";
 import { getGuild, setProperty } from "../utils/db.ts";
 
@@ -13,19 +13,25 @@ export default {
       client.dbcache.set(message.guildId, guild);
     }
     const prefix: string = client.dbcache.get(message.guildId)?.config?.prefix;
+    if (message.content === `<@!${client.bot?.id}>`) {
+      return message.reply(
+        `Hi! My prefix in this server is \`${prefix}\`\nGet started with \`${prefix} help!\``,
+      );
+    }
     if (!message.content.startsWith(prefix)) return;
     const args = message.content.slice(prefix.length).trim().split(" "),
-      commandName = args.shift()
+      commandName = args.shift();
     if (!commandName) return;
-    const command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName)||"")
+    const command = client.commands.get(commandName) ||
+      client.commands.get(client.aliases.get(commandName) || "");
     if (!command) return;
     if (command.owner) {
       if (!config.owners.includes(String(message.authorId))) return;
     }
     try {
-      command.run(message,client,args)
+      command.run(message, client, args);
     } catch (e) {
-      message.send(`Woops, something bad happened: ${e}`)
+      message.send(`Woops, something bad happened: ${e}`);
     }
   },
 };

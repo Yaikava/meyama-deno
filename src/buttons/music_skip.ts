@@ -22,6 +22,6 @@ export default {
         flags: 64,
       },
     });
-    manager.stop()
+    manager.stop();
   },
 };
