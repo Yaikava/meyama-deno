@@ -83,7 +83,7 @@ async function execQueue(
             fields: [
               {
                 name: "State",
-                value: player.paused ? "Paused" : "Playing",
+                value: track.isStream? "Live Stream" : player.paused ? "Paused" : "Playing",
                 inline: true,
               },
               { name: "Loop", value: queue.loop, inline: true },
@@ -102,6 +102,7 @@ async function execQueue(
                 name: "⏯️",
                 id: undefined,
               },
+              disabled: track.isStream
             },
             {
               type: 2,
@@ -111,7 +112,7 @@ async function execQueue(
               emoji: {
                 name: "⏩",
                 id: undefined,
-              },
+              }
             },
             {
               type: 2,
