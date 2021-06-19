@@ -56,7 +56,7 @@ export class BotClient extends Client {
     this.reminders = [];
     this.commands = new Collection();
     this.dbcache = new Collection();
-    this.brandingColor = 12112639;
+    this.brandingColor = 3092790;
 
     //loading stuff
     this.loadEvents();
@@ -132,7 +132,7 @@ export class BotClient extends Client {
       const name = command.name.slice(0, -3);
       const e: command = (await import(`../commands/${command.name}`)).default;
       this.commands.set(name, e);
-      if (e.aliases) {
+      if (e.aliases[0]) {
         e.aliases.forEach((alias) => {
           this.aliases.set(alias, name);
         });
@@ -145,7 +145,7 @@ export class BotClient extends Client {
   async loadReminders() {
     console.log("Caching reminders...");
     const reminders = await db.getReminders();
-    this.reminders = reminders;
+    this.reminders = reminders as reminder[];
     console.log("Reminders cached!");
   }
 }

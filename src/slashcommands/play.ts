@@ -1,7 +1,7 @@
 import {
   DiscordApplicationCommandOptionTypes,
-  DiscordenoMember,
   snowflakeToBigint,
+  UniversityMember,
   UniversitySlashInteraction,
 } from "../../deps.ts";
 import { BotClient } from "../classes/Client.ts";
@@ -11,7 +11,7 @@ import { addPlaylistToQueue, addSoundToQueue } from "../utils/voice.ts";
 export default {
   async run(
     interaction: UniversitySlashInteraction,
-    member: DiscordenoMember,
+    member: UniversityMember,
     client: BotClient,
   ) {
     if (
@@ -42,12 +42,6 @@ export default {
         },
       });
     }
-    if (!player) {
-      player = client.musicManager.create(
-        interaction.guildId.toString(),
-      );
-    }
-    player.connect(voiceState.channelId.toString(), { selfDeaf: true });
 
     if (!interaction.data.options) return;
     let song = "";
@@ -61,6 +55,19 @@ export default {
     const result = await client.musicManager.search(
       isURL(song) ? song : `ytsearch:${song}`,
     );
+    if (result.loadType == "LOAD_FAILED" || result.loadType == "NO_MATCHES") {
+      return await interaction.edit({
+        content: "Couldn't find anything :(",
+      });
+    }
+
+    if (!player) {
+      player = client.musicManager.create(
+        interaction.guildId.toString(),
+      );
+    }
+    player.connect(voiceState.channelId.toString(), { selfDeaf: true });
+
     switch (result.loadType) {
       case "TRACK_LOADED":
       case "SEARCH_RESULT": {
@@ -74,10 +81,6 @@ export default {
           client,
         );
       }
-      default:
-        return await interaction.edit({
-          content: "Couldn't find anything :(",
-        });
     }
   },
 };

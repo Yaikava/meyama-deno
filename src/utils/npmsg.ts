@@ -37,7 +37,7 @@ export default async (
             track.isStream ? "Live stream" : duration(track.length)
           }\n**Requester:** ${
             queue.requester[0].split(" ").slice(1).join(" ")
-          }\n**Paused:** ${player.paused}`,
+          }`,
         fields: [
           {
             name: "State",

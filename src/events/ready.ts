@@ -1,5 +1,6 @@
 import { BotClient } from "../classes/Client.ts";
 import { DiscordActivityTypes } from "../../deps.ts";
+import reminders from "../utils/reminders.ts";
 
 export default {
   once: true,
@@ -21,5 +22,6 @@ export default {
     }
     setInterval(activity, 180000);
     activity();
+    reminders(client);
   },
 };

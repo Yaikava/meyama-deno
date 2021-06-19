@@ -16,7 +16,7 @@ export default {
       message.content === `<@${client.bot?.id}>`
     ) {
       return message.reply(
-        `Hi! My prefix in this server is \`${prefix}\`\nGet started with \`${prefix}help!\``,
+        `Hi! My prefix in this server is \`${prefix}\`\nGet started with \`${prefix}help\``,
       );
     }
     if (!message.content.startsWith(prefix)) return;
