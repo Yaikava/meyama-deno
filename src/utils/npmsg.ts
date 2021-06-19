@@ -93,7 +93,7 @@ export default async (
           type: 2,
           customId: "music_loop",
           label: "Loop",
-          style: DiscordButtonStyles.Success,
+          style: DiscordButtonStyles.Secondary,
           emoji: {
             name: "🔁",
             id: undefined,
@@ -106,36 +106,52 @@ export default async (
         {
           type: 2,
           customId: "music_volume_minus25",
-          label: "Volume -25",
+          label: "-25",
           style: DiscordButtonStyles.Primary,
-          disabled: player.volume<25
+          disabled: player.volume<25,
+          emoji: {
+            name: "🔈",
+            id: undefined
+          }
         },
         {
           type: 2,
           customId: "music_volume_minus10",
-          label: "Volume -10",
+          label: "-10",
           style: DiscordButtonStyles.Primary,
-          disabled: player.volume<10
+          disabled: player.volume<10,
+          emoji: {
+            name: "🔉",
+            id: undefined
+          }
         },
         {
           type: 2,
           customId: "music_volume_default",
           label: "Default Volume",
-          style: DiscordButtonStyles.Primary,
+          style: DiscordButtonStyles.Success,
         },
         {
           type: 2,
           customId: "music_volume_plus10",
-          label: "Volume +10",
+          label: "+10",
           style: DiscordButtonStyles.Primary,
-          disabled: player.volume>190
+          disabled: player.volume>190,
+          emoji: {
+            name: "🔉",
+            id: undefined
+          }
         },
         {
           type: 2,
           customId: "music_volume_plus25",
-          label: "Volume +25",
+          label: "+25",
           style: DiscordButtonStyles.Primary,
-          disabled: player.volume>175
+          disabled: player.volume>175,
+          emoji: {
+            name: "🔊",
+            id: undefined
+          }
         },
       ],
     }],
