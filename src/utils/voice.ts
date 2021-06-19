@@ -142,7 +142,7 @@ export async function addPlaylistToQueue(
         `Added ${tracks.length} songs from the playlist: ${playlistName} to the queue!`,
     });
   }
-  const member = interaction.member
+  const member = interaction.member;
   if (!member) return;
   if (queue) {
     queue.songs = queue.songs.concat(tracks);

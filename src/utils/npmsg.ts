@@ -50,8 +50,10 @@ export default async (
           },
           { name: "Loop", value: queue.loop, inline: true },
           {
-            name: "Volume", value: String(player.volume), inline: true 
-          }
+            name: "Volume",
+            value: String(player.volume),
+            inline: true,
+          },
         ],
       },
     ],
@@ -108,22 +110,22 @@ export default async (
           customId: "music_volume_minus25",
           label: "-25",
           style: DiscordButtonStyles.Primary,
-          disabled: player.volume<25,
+          disabled: player.volume < 25,
           emoji: {
             name: "🔈",
-            id: undefined
-          }
+            id: undefined,
+          },
         },
         {
           type: 2,
           customId: "music_volume_minus10",
           label: "-10",
           style: DiscordButtonStyles.Primary,
-          disabled: player.volume<10,
+          disabled: player.volume < 10,
           emoji: {
             name: "🔉",
-            id: undefined
-          }
+            id: undefined,
+          },
         },
         {
           type: 2,
@@ -136,22 +138,22 @@ export default async (
           customId: "music_volume_plus10",
           label: "+10",
           style: DiscordButtonStyles.Primary,
-          disabled: player.volume>190,
+          disabled: player.volume > 190,
           emoji: {
             name: "🔉",
-            id: undefined
-          }
+            id: undefined,
+          },
         },
         {
           type: 2,
           customId: "music_volume_plus25",
           label: "+25",
           style: DiscordButtonStyles.Primary,
-          disabled: player.volume>175,
+          disabled: player.volume > 175,
           emoji: {
             name: "🔊",
-            id: undefined
-          }
+            id: undefined,
+          },
         },
       ],
     }],

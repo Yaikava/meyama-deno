@@ -12,7 +12,7 @@ export default {
     const check = buttonsVoiceCheck(interaction, member, client);
     if (!check) return;
     const manager = check.manager, volume = manager.volume;
-    await manager.setVolume(volume+25)
+    if (volume <= 175) await manager.setVolume(volume + 25);
     await npmsg(interaction, client);
   },
 };

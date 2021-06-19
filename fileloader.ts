@@ -1,4 +1,5 @@
 import "file:///home/lumap/meyama-deno/src/commands/eval.ts#0";
+import "file:///home/lumap/meyama-deno/src/commands/prefix.ts#0";
 import "file:///home/lumap/meyama-deno/src/commands/help.ts#0";
 import "file:///home/lumap/meyama-deno/src/commands/ping.ts#0";
 import "file:///home/lumap/meyama-deno/src/buttons/music_skip.ts#1";
