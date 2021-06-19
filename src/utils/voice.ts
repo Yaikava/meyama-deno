@@ -1,11 +1,6 @@
-import {
-  DiscordButtonStyles,
-  Player,
-  Track,
-  UniversitySlashInteraction,
-} from "../../deps.ts";
+import { Player, Track, UniversitySlashInteraction } from "../../deps.ts";
 import { BotClient } from "../classes/Client.ts";
-import duration from "./duration.ts";
+import npmsg from "./npmsg.ts";
 
 /** Convert milliseconds to MM:SS */
 export function getMusicLength(milliseconds: number) {
@@ -34,17 +29,8 @@ async function execQueue(
     );
     channel = guild.channels.get(queue.textChannelId);
   }
-  let member = guild.members.get(queue.requester[0]);
-  if (!member) {
-    member = await client.helpers.members.getMember(
-      BigInt(interaction.guildId),
-      queue.requester[0],
-      { force: true },
-    );
-  }
 
   player.play(queue.songs[0].track);
-
 
   // Handle if bot gets kicked from the voice channel
   player.once("closed", async () => {
@@ -55,94 +41,19 @@ async function execQueue(
       await queue.npmsg.delete();
     }
     client.musicQueue.delete(interaction.guildId);
-    if (!member || !channel) return;
+    if (!channel) return;
     await client.musicManager.destroy(interaction.guildId);
     await channel.send("I have been disconnected from the channel.");
   });
 
   player.on("start", async () => {
-    const track = queue.songs[0].info;
-    if (!member || !channel) return;
-    queue.npmsg = await channel.send(
-      {
-        embeds: [
-          {
-            author: {
-              name: "Meyama",
-              iconUrl: client.bot?.avatarURL,
-            },
-            footer: {
-              text: "©2020-2021 - Made by Lumap#0001",
-            },
-            color: client.brandingColor,
-            title: "Now Playing",
-            description:
-              `**Title:** [${track.title}](${track.uri})\n**Author:** ${track.author}\n**Duration:** ${
-                track.isStream ? "Live stream" : duration(track.length)
-              }\n**Requester:** ${member.tag}\n**Paused:** ${player.paused}`,
-            fields: [
-              {
-                name: "State",
-                value: track.isStream? "Live Stream" : player.paused ? "Paused" : "Playing",
-                inline: true,
-              },
-              { name: "Loop", value: queue.loop, inline: true },
-            ],
-          },
-        ],
-        components: [{
-          type: 1,
-          components: [
-            {
-              type: 2,
-              customId: "music_pause_play",
-              label: "Pause/Play",
-              style: DiscordButtonStyles.Secondary,
-              emoji: {
-                name: "⏯️",
-                id: undefined,
-              },
-              disabled: track.isStream
-            },
-            {
-              type: 2,
-              customId: "music_skip",
-              label: "Skip",
-              style: DiscordButtonStyles.Secondary,
-              emoji: {
-                name: "⏩",
-                id: undefined,
-              }
-            },
-            {
-              type: 2,
-              customId: "music_stop",
-              label: "Stop",
-              style: DiscordButtonStyles.Danger,
-              emoji: {
-                name: "🛑",
-                id: undefined,
-              },
-            },
-            {
-              type: 2,
-              customId: "music_loop",
-              label: "Loop",
-              style: DiscordButtonStyles.Primary,
-              emoji: {
-                name: "🔁",
-                id: undefined,
-              },
-            },
-          ],
-        }],
-      },
-    );
+    if (!channel) return;
+    queue.npmsg = await npmsg(interaction, client, channel);
   });
 
   player.on("end", async () => {
     if (!interaction.guildId) return;
-    if (!member || !channel) return;
+    if (!channel) return;
     if (queue.loop == "disabled") {
       queue.songs.shift();
       queue.requester.shift();
@@ -194,14 +105,16 @@ export async function addSoundToQueue(
   if (queue) {
     queue.songs = queue.songs.concat(track);
     queue.requester = queue.requester.concat(
-      BigInt(interaction.member.user.id),
+      `${interaction.member.user.id} ${interaction.member.user.username}#${interaction.member.user.discriminator}`,
     );
     await editInteraction();
   } else {
     client.musicQueue.set(interaction.guildId, {
       textChannelId: BigInt(interaction.channelId),
       songs: [track],
-      requester: [BigInt(interaction.member.user.id)],
+      requester: [
+        `${interaction.member.user.id} ${interaction.member.user.username}#${interaction.member.user.discriminator}`,
+      ],
       loop: "disabled",
     });
     await editInteraction();
@@ -215,7 +128,7 @@ export async function addPlaylistToQueue(
   tracks: Track[],
   client: BotClient,
 ) {
-  if (!interaction.guildId || !interaction.channelId || !interaction.member) {
+  if (!interaction.guildId || !interaction.channelId) {
     return;
   }
   const player = client.musicManager.players.get(
@@ -229,11 +142,13 @@ export async function addPlaylistToQueue(
         `Added ${tracks.length} songs from the playlist: ${playlistName} to the queue!`,
     });
   }
+  const member = interaction.member
+  if (!member) return;
   if (queue) {
     queue.songs = queue.songs.concat(tracks);
     queue.requester = queue.requester.concat(
       Array.from({ length: tracks.length }).map(() =>
-        BigInt(interaction.member?.user.id)
+        `${member.user.id} ${member.user.username}#${member.user.discriminator}`
       ),
     );
     await editInteraction();
@@ -242,7 +157,7 @@ export async function addPlaylistToQueue(
       textChannelId: BigInt(interaction.channelId),
       songs: tracks,
       requester: Array.from({ length: tracks.length }).map(() =>
-        BigInt(interaction.member?.user.id)
+        `${member.user.id} ${member.user.username}#${member.user.discriminator}`
       ),
       loop: "disabled",
     });

@@ -4,7 +4,7 @@ export type musicQueue = {
   songs: Track[];
   textChannelId: bigint;
   npmsg?: UniversityMessage;
-  requester: bigint[];
+  requester: string[];
   loop: "disabled" | "track" | "queue";
 };
 export default musicQueue;

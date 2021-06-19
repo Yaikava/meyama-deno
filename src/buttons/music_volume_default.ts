@@ -1,10 +1,7 @@
-import {
-  UniversityButtonInteraction,
-  UniversityMember,
-} from "../../deps.ts";
+import { UniversityButtonInteraction, UniversityMember } from "../../deps.ts";
 import { BotClient } from "../classes/Client.ts";
 import buttonsVoiceCheck from "../utils/buttons_voicecheck.ts";
-import npmsg from "../utils/npmsg.ts"
+import npmsg from "../utils/npmsg.ts";
 
 export default {
   run: async (
@@ -14,8 +11,8 @@ export default {
   ) => {
     const check = buttonsVoiceCheck(interaction, member, client);
     if (!check) return;
-    const manager = check.manager
-    manager.paused ? await manager.resume() : await manager.pause();
-    await npmsg(interaction,client)
+    const manager = check.manager;
+    await manager.setVolume(100);
+    await npmsg(interaction, client);
   },
 };

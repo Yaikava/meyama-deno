@@ -16,7 +16,7 @@ export default (
   const manager = client.musicManager.players.get(interaction.guildId);
   const queue = client.musicQueue.get(interaction.guildId);
   if (!manager || !queue) return;
-  if (queue.requester[0] !== member.id) {
+  if (BigInt(queue.requester[0].split(" ")[0]) !== member.id) {
     interaction.send({
       type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
       data: {
